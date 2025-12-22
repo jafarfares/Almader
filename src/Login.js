@@ -1,35 +1,41 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import ThemeContext from "./Context/Context";
+
+
 import axios from "axios";
 
 export default function Login() {
-  const [information, setInformation] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
+
+  const { information, setInformation } = useContext(ThemeContext);
+
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
- 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      navigate("/Dashboard", { replace: true });
-    }
-  }, [navigate]);
-
+  const [error,setError]=useState(null);
   
   async function AddUser(e) {
     e.preventDefault();
 
-   
+    const forbidden = /[.;:\[\]]/;
+
     if (!information.name || !information.email || !information.password) {
-      alert("املأ كل الحقول");
+      setError("Fill in all fields");
       return;
     }
-
+    if(forbidden.test(information.name)||information.name.length<3||information.name.length>15||/\d/.test(information.name)){
+      setError("The name must be between 3 and 15 characters and not contain numbers");
+      return;
+    }
+    if(information.password.length<6){
+      setError("The password must consist of at least 6 numbers or letters");
+      return;
+    }
+    if(!/\S+@\S+\.\S+/.test(information.email)){
+      setError("The password must consist of at least 6 numbers or letters");
+      return;
+    }
     setLoading(true);
 
     try {
@@ -40,13 +46,14 @@ export default function Login() {
 
       if (res.data?.token) {
         localStorage.setItem("token", res.data.token);
+        localStorage.setItem("user",  JSON.stringify(information));
         navigate("/Dashboard", { replace: true });
       } else {
-        alert("لم يتم تسجيل المستخدم بنجاح");
+        alert("Login failed");
       }
     } catch (err) {
       console.log(err.response?.data || err.message);
-      alert(err.response?.data?.message || "فشل التسجيل");
+      alert(err.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -162,6 +169,8 @@ export default function Login() {
               }}
             />
           </div>
+
+          <h5 style={{color:"red"}}>{error}</h5>
 
           <button
             type="submit"

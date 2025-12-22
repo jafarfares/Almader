@@ -1,24 +1,60 @@
-import logo from './logo.svg';
-import './App.css';
+// import { Routes, Route } from "react-router-dom";
+// import { ThemeProvider } from "./Context/Context";
+
+// //Routes
+// import ProminentAppBar from "./AppBar";
+// import Login from "./Login";
+// import Profile from "./Profile";
+
+// function App() {
+//   return (
+    
+//     <ThemeProvider>
+//       <Routes>
+//         <Route path="/" element={<Login />} />
+//         <Route path="/Dashboard" element={<ProminentAppBar />} />
+//         <Route path="profile" element={<Profile />} />
+//       </Routes>
+//     </ThemeProvider>
+  
+//   );
+// }
+
+// export default App;
+
+
+
+
+import { Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "./Context/Context";
+
+// Pages
+import ProminentAppBar from "./AppBar";
+import Login from "./Login";
+import Profile from "./Profile";
+import Dashoard from "./Dashboard";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider>
+      <Routes>
+
+        {/* Login */}
+        <Route path="/" element={<Login />} />
+
+        
+        <Route path="/dashboard" element={<ProminentAppBar />}>
+          
+          
+          <Route index element={<Dashoard />} />
+
+          
+          <Route path="profile" element={<Profile />} />
+
+        </Route>
+
+      </Routes>
+    </ThemeProvider>
   );
 }
 

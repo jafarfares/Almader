@@ -1,0 +1,92 @@
+/* Profile page styles inspired by provided design */
+.profile-page{
+  width:100%;
+  min-height:calc(100vh - 64px);
+  padding:20px;
+  box-sizing:border-box;
+  background-size:cover;
+  background-position:center;
+}
+
+.profile-header{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  margin-bottom:18px;
+}
+.profile-header h2{margin:0;font-size:22px}
+.profile-header .muted{margin:0;color:#7e7676}
+
+.profile-main{
+  width:100%;
+  display:flex;
+  gap:30px;
+  justify-content:center;
+  align-items:flex-start;
+}
+
+/* translucent overlay card that shows the background behind it */
+.overlay-card{
+  width:100%;
+  border-radius:16px;
+  padding:26px;
+  box-sizing:border-box;
+  background: rgba(40, 36, 36, 0.55);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+}
+
+.left-card{
+  width:45%;
+  min-height:360px;
+  background:#fff;
+  border-radius:14px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.08);
+  padding:24px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  align-items:center;
+  text-align:center;
+}
+
+.avatar-wrap{ width:100%; display:flex; justify-content:center; }
+.avatar-icon{ font-size:140px !important; color:#d8d8d8 }
+
+.profile-info{ width:100%; display:flex; flex-direction:column; gap:5px; align-items:center }
+.profile-info .info-row{ border-bottom:none; padding:6px 0 }
+.info-row{ display:flex; flex-direction:column; gap:6px; padding:8px 0; border-bottom:1px solid #f0f0f0 }
+.info-row label{ font-size:12px; color:#9a9a9a }
+.info-row div{ font-size:15px; color:#333 }
+
+.save-row{ display:flex; justify-content:flex-start; padding-top:8px }
+.save-btn{
+  background:linear-gradient(90deg,#ff6b4a,#ff9a6b);
+  border:none;
+  color:white;
+  padding:10px 26px;
+  border-radius:28px;
+  font-weight:600;
+  cursor:pointer;
+  box-shadow:0 6px 12px rgba(255,105,80,0.18);
+}
+
+.right-column{ width:35%; display:flex; flex-direction:column; gap:18px }
+.card{ background:#fff; border-radius:12px; padding:18px; box-shadow:0 6px 18px rgba(0,0,0,0.06) }
+.card-title{ font-weight:700; margin-bottom:12px }
+.account-item{ display:flex; justify-content:space-between; align-items:center; padding:8px 0 }
+.account-item.muted{ color:#9a9a9a }
+.account-info{ font-size:14px;color:black }
+.pill{ background:#f0f0f0; border:none; padding:6px 10px; border-radius:12px; cursor:pointer }
+
+.bills-list{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px }
+.bills-list li{ display:flex; justify-content:space-between; align-items:center }
+.dot{ width:10px; height:10px; display:inline-block; border-radius:50%; margin-right:10px }
+.dot.green{ background:#28c76f }
+.dot.red{ background:#ff6b6b }
+
+@media (max-width:900px){
+  .profile-main{ flex-direction:column; align-items:stretch }
+  .left-card, .right-column{ width:100% }
+}
