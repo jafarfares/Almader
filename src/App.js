@@ -1,30 +1,3 @@
-// import { Routes, Route } from "react-router-dom";
-// import { ThemeProvider } from "./Context/Context";
-
-// //Routes
-// import ProminentAppBar from "./AppBar";
-// import Login from "./Login";
-// import Profile from "./Profile";
-
-// function App() {
-//   return (
-    
-//     <ThemeProvider>
-//       <Routes>
-//         <Route path="/" element={<Login />} />
-//         <Route path="/Dashboard" element={<ProminentAppBar />} />
-//         <Route path="profile" element={<Profile />} />
-//       </Routes>
-//     </ThemeProvider>
-  
-//   );
-// }
-
-// export default App;
-
-
-
-
 import { Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./Context/Context";
 
@@ -33,6 +6,7 @@ import ProminentAppBar from "./AppBar";
 import Login from "./Login";
 import Profile from "./Profile";
 import Dashoard from "./Dashboard";
+import Register from "./Register";
 
 function App() {
   return (
@@ -40,12 +14,15 @@ function App() {
       <Routes>
 
         {/* Login */}
+
         <Route path="/" element={<Login />} />
+
+        <Route path="/Register" element={<Register />} />
 
         
         <Route path="/dashboard" element={<ProminentAppBar />}>
           
-          
+
           <Route index element={<Dashoard />} />
 
           
