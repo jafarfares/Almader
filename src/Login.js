@@ -210,9 +210,34 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import ThemeContext from "./Context/Context";
 import axios from "axios";
+import { Password } from "@mui/icons-material";
+import "./index.css";
 
 export default function Login() {
-   const navigate = useNavigate();
+
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
+
+  const [information,setInformation]=useState({email:"",password:""})
+  
+  async function LoginUser(e){
+    e.preventDefault();
+    setLoading(true);
+    try{
+      //http://a04wg0wwccosgc4kk40kkwo8.168.231.110.172.sslip.io/api/login
+      const res=await axios.post("https://backendlaravel.cupital.xyz/api/login",{
+      email:information.email,
+      password:information.password
+      })
+      localStorage.setItem("token", res.data.token);
+      navigate("/Dashboard", { replace: true });
+    }catch(error){
+      console.log("error",error)
+    }finally{
+      setLoading(false);
+    }
+  }
 
   return (
     <div
@@ -222,7 +247,7 @@ export default function Login() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#594664ff",
+        backgroundColor: "#F4F5F7",
       }}
     >
       {/* Glass Card */}
@@ -231,7 +256,7 @@ export default function Login() {
           width: "380px",
           padding: "30px",
           borderRadius: "18px",
-          background: "rgba(121, 117, 117, 0.15)",
+          background: "#FFFFFF",
           backdropFilter: "blur(15px)",
           WebkitBackdropFilter: "blur(15px)",
           boxShadow: "0 8px 32px rgba(0,0,0,0.25)",
@@ -244,7 +269,7 @@ export default function Login() {
         <h2
           style={{
             textAlign: "center",
-            color: "#6a1b9a",
+            color: "#6A1B9A",
             fontWeight: "600",
             marginBottom: "10px",
           }}
@@ -252,7 +277,7 @@ export default function Login() {
           Login
         </h2>
 
-        <form>
+        <form onSubmit={LoginUser}>
           {/* Email */}
           <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
             <label style={{ color: "white", fontSize: "14px" }}>Email</label>
@@ -262,12 +287,14 @@ export default function Login() {
               style={{
                 padding: "12px",
                 borderRadius: "12px",
-                border: "1px solid rgba(255,255,255,0.3)",
-                background: "rgba(255,255,255,0.1)",
-                color: "white",
+                border: "1px solid #E0E0E0",
+                backgroundColor:"#E0E0E0",
+                color: "#333333",
                 outline: "none",
                 fontSize: "14px",
               }}
+              value={information.email}
+              onChange={(e)=>setInformation({...information,email:e.target.value})}
             />
           </div>
 
@@ -280,32 +307,36 @@ export default function Login() {
               style={{
                 padding: "12px",
                 borderRadius: "12px",
-                border: "1px solid rgba(255,255,255,0.3)",
-                background: "rgba(255,255,255,0.1)",
-                color: "white",
+                border: "1px solid #E0E0E0",
+                backgroundColor:"#E0E0E0",
+                color: "#333333",
                 outline: "none",
                 fontSize: "14px",
               }}
+              value={information.password}
+              onChange={(e)=>setInformation({...information,password:e.target.value})}
             />
           </div>
 
           {/* Button */}
           <button
             type="submit"
+            className="Button"
             style={{
               marginTop: "15px",
               width: "100%",
               padding: "12px",
               borderRadius: "25px",
-              background: "white",
-              color: "#6a1b9a",
+              background: "#6A1B9A",
+              color: "#FFFFFF",
               fontWeight: "bold",
               border: "none",
               cursor: "pointer",
               fontSize: "16px",
             }}
+            
           >
-            Login
+            {loading ? "loading...":"Login"}
           </button>
         </form>
 
@@ -313,7 +344,7 @@ export default function Login() {
           style={{
             textAlign: "center",
             fontSize: "14px",
-            color: "#6a1b9a",
+            color: "#333333",
           }}
         >
           Don’t have an account?{" "}
@@ -321,7 +352,7 @@ export default function Login() {
             style={{
               background: "none",
               border: "none",
-              color: "blue",
+              color: "#6A1B9A",
               cursor: "pointer",
               fontWeight: "600",
             }}

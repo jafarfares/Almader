@@ -14,7 +14,7 @@ export default function Dashboard() {
     try {
       if (token) {
         await axios.post(
-          "http://a04wg0wwccosgc4kk40kkwo8.168.231.110.172.sslip.io/api/logout",
+          "https://backendlaravel.cupital.xyz/api/logout",
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
