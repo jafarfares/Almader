@@ -5,11 +5,11 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
 import { useSnackbar } from "./SnackbarContext";
-
+import { useParams } from "react-router-dom";
 
 const APPBAR_HEIGHT = 60;
 
-export default function CreatePost() {
+export default function EditPost() {
   const [loading, setLoading] = useState(false);
   const [Info, setInfo] = useState({
     name: "",
@@ -19,15 +19,16 @@ export default function CreatePost() {
 
   const { showSnackbar } = useSnackbar();
 
+  const { id } = useParams();
 
   const fileInputRef = useRef(null);
 
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  async function Create() {
+  async function Edit() {
 
-  if (!Info.name || !Info.dec || !Info.image) {
+  if (!Info.name || !Info.dec) {
     console.log("Please fill all fields and upload an image");
     return;
   }
@@ -37,12 +38,11 @@ export default function CreatePost() {
       const formData = new FormData();
       formData.append("name", Info.name);
       formData.append("dec", Info.dec);
-      if (Info.image) {
       formData.append("image", Info.image);
-      }
+      
 
       await axios.post(
-        "https://backendlaravel.cupital.xyz/api/post",
+        `https://backendlaravel.cupital.xyz/api/post/${id}`,
         formData,
         {
           headers: {
@@ -50,7 +50,7 @@ export default function CreatePost() {
           },
         }
       );
-      showSnackbar("Post created successfully");
+      showSnackbar("Post Edited successfully");
       navigate("/dashboard/MyPost");
       
     } catch (error) {
@@ -104,7 +104,7 @@ export default function CreatePost() {
       >
         {/* title */}
         <h2 style={{ marginBottom: "28px", fontWeight: 600 }}>
-          Create Post
+          Edit Post
         </h2>
 
         
@@ -166,7 +166,7 @@ export default function CreatePost() {
         {/* Buttons */}
         <div style={{ marginTop: "36px", display: "flex", gap: "14px" }}>
           <Button
-            onClick={Create}
+            onClick={Edit}
             disabled={loading}
             sx={{
               textTransform: "none",
@@ -176,7 +176,7 @@ export default function CreatePost() {
               "&:hover": { backgroundColor: "#e08e0b" },
             }}
           >
-            {loading ? "Creating..." : "Create"}
+            {loading ? "Update..." : "Update"}
           </Button>
 
           <Button

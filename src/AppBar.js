@@ -1,12 +1,10 @@
-import { useState } from "react";
+// import { useState,useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 
 import { Outlet } from "react-router-dom";
-
-// import Dashoard from "./Dashboard";
 
 import { Button } from "@mui/material";
 
@@ -20,20 +18,67 @@ import PersonIcon from '@mui/icons-material/Person';
 
 import SettingsIcon from '@mui/icons-material/Settings';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-// import PostAddIcon from '@mui/icons-material/PostAdd';
 import WysiwygIcon from '@mui/icons-material/Wysiwyg';
 import { NavLink } from "react-router-dom";
+import { useState,useEffect } from "react";
+
+import axios from "axios";
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   alignItems: "flex-start",
   paddingTop: theme.spacing(1),
   paddingBottom: theme.spacing(2),
+  padding: "0 16px",
   "@media all": {
-    minHeight: 128,
+    minHeight: 64,
   },
 }));
 
 export default function ProminentAppBar() {
+
+
+
+
+
+const [show,setShow]=useState({imge:""})
+
+const token=localStorage.getItem("token");
+
+useEffect(() => {
+    async function fetchProfile() {
+      try {
+        if (!token) return;
+
+        const res = await axios.get(
+          "https://backendlaravel.cupital.xyz/api/profile",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const profile = res.data.data;
+        if (!profile) return;
+
+        setShow({
+          imge: profile.image_url || "",
+        });
+      } catch (error) {
+        console.log("Fetch profile error:", error);
+      }
+    }
+
+    fetchProfile();
+  }, [token]);
+
+
+
+
+
+
+
   const navigate = useNavigate();
 
   const [color, setColor] = useState(false);
@@ -68,18 +113,16 @@ export default function ProminentAppBar() {
           top: 0,
           overflowY: "auto",
           zIndex: 1200,
+          marginTop:"60px"
         }}
       >
-        <div>
-          <h2 style={{ marginTop: "30px", color: "black" }}>Almder</h2>
-        </div>
         <Box
           sx={{
             width: "100%",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-             gap: 1,
+            gap: 1,
             marginTop:"20px"
           }}
         >
@@ -121,33 +164,48 @@ export default function ProminentAppBar() {
         sx={{
           flexGrow: 1,
           transition: "margin-left 0.3s",
-          marginLeft: "220px", // account for fixed sidebar width + gap
+          marginLeft: "205px", // account for fixed sidebar width + gap
+          width: "calc(100% - 200px)",
+          marginTop: "60px",
         }}
-      >
-        <AppBar position="static" sx={{ height: "60px", backgroundColor: "white", boxShadow: "none" }}>
+        >
+        <AppBar  position="fixed" sx={{ width: "100%",left: 0,zIndex: 1300,height: "60px", backgroundColor: "#f6f4f7ff", boxShadow: "none" }}>
           <StyledToolbar
-            sx={{ display: "flex", justifyContent: "space-between" }}
+            sx={{ display: "flex", justifyContent: "space-between" ,alignItems:"center"}}
           >
             <div>
-              {/* sidebar toggle removed per request */}
+              <h2 style={{color:"black"}}>Almader</h2>
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              {/* dark mode icon removed — only profile icon remains */}
-              <IconButton size="large" aria-label="profile" edge="end" sx={{ color: "black" }} onClick={() => navigate("profile")}>
-                <AccountCircleIcon />
-              </IconButton>
-            </div>
+            {/* <div  style={{ display: "flex", alignItems: "center", gap: "10px",backgroundColor:"red"}}> */}
+              <button style={{border:"none",background:"none"}}>
+              {show.imge ? (
+                  <img
+                    src={show.imge}
+                    alt="avatar"
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => navigate("profile")}
+                  />
+                ):(
+              <AccountCircleIcon onClick={() => navigate("profile")} sx={{ color: "#b8b2b2ff",marginTop:"5px",fontSize:"30px" }} />
+              )}
+              </button>
+            {/* </div> */}
+
           </StyledToolbar>
         </AppBar>
+        
 
-        <Box sx={{ padding: "20px" }}>
+        <Box sx={{ overflowX: "hidden" ,msrginTop:"60px"}}>
           <Outlet />
         </Box>
       </Box>
     </Box>
   );
 }
-
-
-

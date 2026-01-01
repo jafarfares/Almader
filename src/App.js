@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./Context/Context";
+import { SnackbarProvider } from "./SnackbarContext";
 
 // Pages
 import ProminentAppBar from "./AppBar";
@@ -11,9 +12,14 @@ import MyPost from "./MyPost";
 import Posts from "./Posts";
 import Settings from "./Settings";
 import CreatePost from "./CreatePost";
+import EditPost from "./EditPost";
+
 function App() {
+  
   return (
     <ThemeProvider>
+     <SnackbarProvider>
+  
       <Routes>
 
         <Route path="/" element={<Login />} />
@@ -35,9 +41,12 @@ function App() {
 
           <Route path="CreatePost" element={<CreatePost />}/>
 
+          <Route path="EditPost/:id" element={<EditPost/>}/>
+
         </Route>
 
       </Routes>
+     </SnackbarProvider> 
     </ThemeProvider>
   );
 }
