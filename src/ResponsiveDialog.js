@@ -51,8 +51,8 @@ export default function ResponsiveDialog({ open, onClose, postId, onDeleted }) {
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={DeletePost} autoFocus>
+        <Button sx={{color:"black",textTransform:"none"}} onClick={onClose}>Cancel</Button>
+        <Button sx={{color:"red",textTransform:"none"}} onClick={DeletePost} autoFocus>
           Delete
         </Button>
       </DialogActions>

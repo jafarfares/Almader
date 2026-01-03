@@ -6,6 +6,7 @@ import "./Profile.css";
 import { Select, MenuItem, InputLabel, FormControl } from "@mui/material";
 
 function Profile() {
+  
   const [create, setCreate] = useState({
     name: "",
     bio: "",
@@ -62,7 +63,6 @@ function Profile() {
         form.append("image", create.file);
 
         res = await axios.post(
-          //http://a04wg0wwccosgc4kk40kkwo8.168.231.110.172.sslip.io/api/profile
           "https://backendlaravel.cupital.xyz/api/profile",
           form,
           {
@@ -98,8 +98,8 @@ function Profile() {
         );
       }
 
-      console.log("TOKEN:", token);
-      console.log("Profile created:", res.data);
+      // console.log("TOKEN:", token);
+      // console.log("Profile created:", res.data);
     } catch (error) {
       if (error.response) {
         console.log("Status:", error.response.status);

@@ -1,13 +1,25 @@
-import { useNavigate } from "react-router-dom";
+//This is Dashboard page code
+
+//axios
+import axios from "axios";
+
+//react
 import { useContext } from "react";
 import ThemeContext from "./Context/Context";
-import axios from "axios";
+
+//react router
+import { useNavigate } from "react-router-dom";
+
+//MUI
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Button } from "@mui/material";
 
 export default function Dashboard() {
+   
   const navigate = useNavigate();
+
   const {information } = useContext(ThemeContext);
+  
   async function logout() {
     const token = localStorage.getItem("token");
 
