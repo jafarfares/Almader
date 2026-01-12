@@ -4,10 +4,12 @@ import axios from "axios";
 import { NavLink } from "react-router-dom";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ResponsiveDialog from "./ResponsiveDialog";
+import { useTheme } from "@mui/material/styles";
 
 const ITEM_HEIGHT = 48;
 
 export default function MyPost() {
+  const theme = useTheme();
   const [posts, setPosts] = useState([]);
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [dialogOpenId, setDialogOpenId] = useState(null);
@@ -81,7 +83,7 @@ export default function MyPost() {
             flexWrap: "wrap",
             gap: "10px",
             padding: "15px",
-            backgroundColor: "rgba(245, 239, 239, 0.55)",
+            backgroundColor: theme.palette.mode === "dark" ? "#282828" : "rgba(245, 239, 239, 0.55)",
             borderRadius: "10px",
             boxShadow: "0 8px 30px rgba(0,0,0,0.06)",
           }}
@@ -97,7 +99,7 @@ export default function MyPost() {
                 sx={{
                   flex: "1 1 300px",
                   maxWidth: "33%",
-                  backgroundColor: "#fff",
+                  backgroundColor: theme.palette.mode === "dark" ? "#000" : "rgba(245, 239, 239, 0.55)",
                   padding: "5px",
                   borderRadius: "5px",
                   position: "relative",

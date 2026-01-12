@@ -2,10 +2,6 @@
 import { createContext, useContext, useState } from "react";
 import CustomizedSnackbars from "./CustomizedSnackbars";
 
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
-import ResponsiveDialog from "./ResponsiveDialog";
-
 const SnackbarContext = createContext();
 
 export function SnackbarProvider({ children }) {

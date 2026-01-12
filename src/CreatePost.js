@@ -1,15 +1,16 @@
 import { Button } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useRef } from "react";
 import { useSnackbar } from "./SnackbarContext";
-
+import { useTheme } from "@mui/material/styles";
 
 const APPBAR_HEIGHT = 60;
 
 export default function CreatePost() {
+  const theme = useTheme();
+
   const [loading, setLoading] = useState(false);
   const [Info, setInfo] = useState({
     name: "",
@@ -17,29 +18,27 @@ export default function CreatePost() {
     image: null,
   });
 
+  
+  const [imagePreview, setImagePreview] = useState(null);
+
   const { showSnackbar } = useSnackbar();
-
-
   const fileInputRef = useRef(null);
-
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
+  //create post
   async function Create() {
-
-  if (!Info.name || !Info.dec || !Info.image) {
-    console.log("Please fill all fields and upload an image");
-    return;
-  }
+    if (!Info.name || !Info.dec || !Info.image) {
+      console.log("Please fill all fields and upload an image");
+      return;
+    }
 
     setLoading(true);
     try {
       const formData = new FormData();
       formData.append("name", Info.name);
       formData.append("dec", Info.dec);
-      if (Info.image) {
       formData.append("image", Info.image);
-      }
 
       await axios.post(
         "https://backendlaravel.cupital.xyz/api/post",
@@ -50,9 +49,9 @@ export default function CreatePost() {
           },
         }
       );
+
       showSnackbar("Post created successfully");
       navigate("/dashboard/MyPost");
-      
     } catch (error) {
       console.log(error);
     } finally {
@@ -60,6 +59,7 @@ export default function CreatePost() {
     }
   }
 
+  //no scrol inside component
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -67,20 +67,23 @@ export default function CreatePost() {
     };
   }, []);
 
+  //to change image and dont put empty information
   function resetForm() {
-  setInfo({ name: "", dec: "", image: null });
-  if (fileInputRef.current) {
-    fileInputRef.current.value = null; 
+    setInfo({ name: "", dec: "", image: null });
+    setImagePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = null;
+    }
+    navigate("/dashboard/MyPost");
   }
-}
 
+  //=======UI======
   return (
-    
-    
     <div
       style={{
         height: `calc(100vh - ${APPBAR_HEIGHT}px)`,
-        backgroundColor:"white",
+        backgroundColor: theme.palette.background.paper,
+        color: theme.palette.text.primary,
         padding: "20px",
         boxSizing: "border-box",
         display: "flex",
@@ -88,12 +91,11 @@ export default function CreatePost() {
         alignItems: "center",
       }}
     >
-      {/* Card */}
       <div
         style={{
           width: "100%",
           height: "100%",
-          backgroundColor: "#f7f5f5ff",
+          backgroundColor: theme.palette.mode === "dark" ? "#111" : "#f7f5f5ff",
           padding: "32px",
           boxSizing: "border-box",
           borderRadius: "16px",
@@ -102,23 +104,15 @@ export default function CreatePost() {
           justifyContent: "center",
         }}
       >
-        {/* title */}
         <h2 style={{ marginBottom: "28px", fontWeight: 600 }}>
           Create Post
         </h2>
 
-        
-        <div
-          style={{
-            display: "flex",
-            gap: "40px",
-            alignItems: "flex-start",
-          }}
-        >
-          {/* input */}
+        <div style={{ display: "flex", gap: "40px" }}>
+          {/* inputs */}
           <div style={{ width: "50%" }}>
             <div style={{ marginBottom: "20px" }}>
-              <label style={labelStyle}>Title</label>
+              <label style={labelStyle}>Title*</label>
               <input
                 type="text"
                 value={Info.name}
@@ -130,7 +124,7 @@ export default function CreatePost() {
             </div>
 
             <div>
-              <label style={labelStyle}>Dec</label>
+              <label style={labelStyle}>Dec*</label>
               <textarea
                 rows={5}
                 value={Info.dec}
@@ -145,25 +139,44 @@ export default function CreatePost() {
           {/* image */}
           <div style={{ width: "45%" }}>
             <label style={labelStyle}>Image</label>
-            <label style={uploadBoxStyle} >
-              <CloudUploadIcon sx={{ fontSize: 42 }} />
-              <span style={{ marginTop: "10px" }}>
-                {Info.image ? Info.image.name : "Upload image"}
-              </span>
+
+            <label style={uploadBoxStyle}>
+              {imagePreview ? (
+                <img
+                  src={imagePreview}
+                  alt="preview"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: "10px",
+                  }}
+                />
+              ) : (
+                <>
+                  <CloudUploadIcon sx={{ fontSize: 42 }} />
+                  <span style={{ marginTop: "10px" }}>
+                    Upload image
+                  </span>
+                </>
+              )}
+
               <input
                 type="file"
                 hidden
                 accept="image/*"
                 ref={fileInputRef}
-                onChange={(e) =>
-                  setInfo({ ...Info, image: e.target.files[0] })
-                }
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (!file) return;
+
+                  setInfo({ ...Info, image: file });
+                  setImagePreview(URL.createObjectURL(file));
+                }}
               />
             </label>
           </div>
         </div>
 
-        {/* Buttons */}
         <div style={{ marginTop: "36px", display: "flex", gap: "14px" }}>
           <Button
             onClick={Create}
@@ -171,9 +184,9 @@ export default function CreatePost() {
             sx={{
               textTransform: "none",
               backgroundColor: "#f59e0b",
-              color: "#000",
               px: 3,
               "&:hover": { backgroundColor: "#e08e0b" },
+              color: theme.palette.text.primary,
             }}
           >
             {loading ? "Creating..." : "Create"}
@@ -183,8 +196,8 @@ export default function CreatePost() {
             onClick={resetForm}
             sx={{
               textTransform: "none",
-              color: "black",
               border: "1px solid #333",
+              color: theme.palette.text.primary,
             }}
           >
             Cancel
@@ -199,7 +212,6 @@ export default function CreatePost() {
 
 const labelStyle = {
   fontSize: "14px",
-  color: "black",
 };
 
 const inputStyle = {
@@ -207,7 +219,7 @@ const inputStyle = {
   marginTop: "8px",
   padding: "12px",
   borderRadius: "8px",
-  border:"none",
+  border: "none",
   backgroundColor: "white",
   color: "black",
   outline: "none",
@@ -222,7 +234,7 @@ const uploadBoxStyle = {
   marginTop: "8px",
   height: "180px",
   border: "1px dashed #333",
-  backgroundColor:"black",
+  backgroundColor: "black",
   borderRadius: "10px",
   display: "flex",
   flexDirection: "column",

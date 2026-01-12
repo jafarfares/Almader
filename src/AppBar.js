@@ -14,6 +14,7 @@ import { Button } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
+import { useTheme } from "@mui/material/styles";
 
 //icon MUI imports
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -37,6 +38,7 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 
 export default function ProminentAppBar() {
 
+  const theme = useTheme();
   const [show, setShow] = useState({ imge: "" });
 
   // Get token from local storage
@@ -90,7 +92,7 @@ export default function ProminentAppBar() {
         sx={{
           width: 200,
           transition: "width 0.3s",
-          backgroundColor: "white",
+          backgroundColor: theme.palette.mode === "dark" ? "#000" : "white",
           color: "white",
           overflow: "hidden",
           display: "flex",
@@ -105,7 +107,7 @@ export default function ProminentAppBar() {
           top: 0,
           overflowY: "auto",
           zIndex: 1200,
-          marginTop: "60px",
+          marginTop: "50px",
         }}
       >
         <Box
@@ -184,7 +186,8 @@ export default function ProminentAppBar() {
             left: 0,
             zIndex: 1300,
             height: "60px",
-            backgroundColor: "#f6f4f7ff",
+            //backgroundColor: "#f6f4f7ff",
+            backgroundColor: theme.palette.mode === "dark" ? "#000" : "#f6f4f7ff",
             boxShadow: "none",
           }}
         >
@@ -196,7 +199,7 @@ export default function ProminentAppBar() {
             }}
           >
             <div>
-              <h2 style={{ color: "black" }}>Almader</h2>
+              <h2 style={{ color: theme.palette.mode === "dark" ? "white" : "#000"}}>Almader</h2>
             </div>
 
             <button style={{ border: "none", background: "none" }}>

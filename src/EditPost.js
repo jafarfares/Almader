@@ -1,58 +1,94 @@
+//Edit page
+
+//MUI
 import { Button } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { useRef } from "react";
+import { useTheme } from "@mui/material/styles";
+//Context
 import { useSnackbar } from "./SnackbarContext";
-import { useParams } from "react-router-dom";
+//react rauter
+import { useNavigate, useParams } from "react-router-dom";
+//react
+import { useState, useEffect, useRef } from "react";
+//axios
+import axios from "axios";
 
 const APPBAR_HEIGHT = 60;
 
 export default function EditPost() {
+
+  //theme dark or light
+  const theme = useTheme();
+  //loading
   const [loading, setLoading] = useState(false);
+
   const [Info, setInfo] = useState({
     name: "",
     dec: "",
     image: null,
   });
-
+  
+  //for show image
+  const [imagePreview, setImagePreview] = useState(null);
+  //Context
   const { showSnackbar } = useSnackbar();
-
+  //post id
   const { id } = useParams();
-
+  //useRef
   const fileInputRef = useRef(null);
-
+  //navigate to another path
   const navigate = useNavigate();
+  //fatch token
   const token = localStorage.getItem("token");
 
+  /* ===== GET POST ===== */
+  useEffect(() => {
+    async function fetchPost() {
+      try {
+        const res = await axios.get(
+          `https://backendlaravel.cupital.xyz/api/post/${id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        const post = res.data.payload;
+
+        setInfo({
+          name: post.name,
+          dec: post.dec,
+          image: null,
+        });
+
+        setImagePreview(post.image_url);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchPost();
+  }, [id]);
+
+  /* ===== EDIT ===== */
   async function Edit() {
-
-  if (!Info.name || !Info.dec) {
-    console.log("Please fill all fields and upload an image");
-    return;
-  }
-
     setLoading(true);
     try {
       const formData = new FormData();
-      formData.append("name", Info.name);
-      formData.append("dec", Info.dec);
-      formData.append("image", Info.image);
-      
+
+      if (Info.name.trim()) formData.append("name", Info.name);
+      if (Info.dec.trim()) formData.append("dec", Info.dec);
+      if (Info.image) formData.append("image", Info.image);
 
       await axios.post(
         `https://backendlaravel.cupital.xyz/api/post/${id}`,
         formData,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
+
       showSnackbar("Post Edited successfully");
       navigate("/dashboard/MyPost");
-      
     } catch (error) {
       console.log(error);
     } finally {
@@ -60,62 +96,36 @@ export default function EditPost() {
     }
   }
 
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, []);
-
-  function resetForm() {
-  setInfo({ name: "", dec: "", image: null });
-  if (fileInputRef.current) {
-    fileInputRef.current.value = null; 
-  }
-}
-
+  //======UI=======
   return (
-    
-    
     <div
       style={{
         height: `calc(100vh - ${APPBAR_HEIGHT}px)`,
-        backgroundColor:"white",
         padding: "20px",
-        boxSizing: "border-box",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
       }}
     >
-      {/* Card */}
       <div
         style={{
           width: "100%",
           height: "100%",
-          backgroundColor: "#f7f5f5ff",
           padding: "32px",
-          boxSizing: "border-box",
           borderRadius: "16px",
           display: "flex",
+          backgroundColor: theme.palette.mode === "dark" ? "#111" : "#f7f5f5ff",
           flexDirection: "column",
           justifyContent: "center",
         }}
       >
-        {/* title */}
+        {/* Head */}
         <h2 style={{ marginBottom: "28px", fontWeight: 600 }}>
           Edit Post
         </h2>
 
-        
-        <div
-          style={{
-            display: "flex",
-            gap: "40px",
-            alignItems: "flex-start",
-          }}
-        >
-          {/* input */}
+        <div style={{ display: "flex", gap: "40px" }}>
+          {/* inputs */}
           <div style={{ width: "50%" }}>
             <div style={{ marginBottom: "20px" }}>
               <label style={labelStyle}>Title</label>
@@ -145,45 +155,64 @@ export default function EditPost() {
           {/* image */}
           <div style={{ width: "45%" }}>
             <label style={labelStyle}>Image</label>
-            <label style={uploadBoxStyle} >
-              <CloudUploadIcon sx={{ fontSize: 42 }} />
-              <span style={{ marginTop: "10px" }}>
-                {Info.image ? Info.image.name : "Upload image"}
-              </span>
+
+            <label style={uploadBoxStyle}>
+              {imagePreview ? (
+                <img
+                  src={imagePreview}
+                  alt="preview"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: "10px",
+                  }}
+                />
+              ) : (
+                <>
+                  <CloudUploadIcon sx={{ fontSize: 42 }} />
+                  <span>Upload image</span>
+                </>
+              )}
+
               <input
                 type="file"
                 hidden
                 accept="image/*"
                 ref={fileInputRef}
-                onChange={(e) =>
-                  setInfo({ ...Info, image: e.target.files[0] })
-                }
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (!file) return;
+
+                  setInfo({ ...Info, image: file });
+                  setImagePreview(URL.createObjectURL(file));
+                }}
               />
             </label>
           </div>
         </div>
 
-        {/* Buttons */}
         <div style={{ marginTop: "36px", display: "flex", gap: "14px" }}>
+
+          {/* Edit Button */}
           <Button
             onClick={Edit}
             disabled={loading}
             sx={{
               textTransform: "none",
-              backgroundColor: "#f59e0b",
-              color: "#000",
               px: 3,
-              "&:hover": { backgroundColor: "#e08e0b" },
+              backgroundColor: "#f59e0b",
+              color:"white"
             }}
           >
             {loading ? "Update..." : "Update"}
           </Button>
-
+          
+          {/* Cancel Button */}
           <Button
-            onClick={resetForm}
+            onClick={() => navigate("/dashboard/MyPost")}
             sx={{
               textTransform: "none",
-              color: "black",
+              color: theme.palette.text.primary,
               border: "1px solid #333",
             }}
           >
@@ -196,10 +225,8 @@ export default function EditPost() {
 }
 
 /* ===== styles ===== */
-
 const labelStyle = {
   fontSize: "14px",
-  color: "black",
 };
 
 const inputStyle = {
@@ -207,9 +234,7 @@ const inputStyle = {
   marginTop: "8px",
   padding: "12px",
   borderRadius: "8px",
-  border:"none",
-  backgroundColor: "white",
-  color: "black",
+  border: "none",
   outline: "none",
 };
 
@@ -221,13 +246,10 @@ const textareaStyle = {
 const uploadBoxStyle = {
   marginTop: "8px",
   height: "180px",
-  border: "1px dashed #333",
-  backgroundColor:"black",
+  border: "1px dashed",
   borderRadius: "10px",
   display: "flex",
-  flexDirection: "column",
   justifyContent: "center",
   alignItems: "center",
   cursor: "pointer",
-  color: "#eee",
 };

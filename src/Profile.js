@@ -4,9 +4,11 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import "./Profile.css";
 import { Select, MenuItem, InputLabel, FormControl } from "@mui/material";
-
+import { useTheme } from '@mui/material/styles';
 function Profile() {
   
+  const theme =useTheme();
+
   const [create, setCreate] = useState({
     name: "",
     bio: "",
@@ -71,6 +73,7 @@ function Profile() {
             },
           }
         );
+       
       } else {
         const payload = {
           name: create.name,
@@ -98,8 +101,8 @@ function Profile() {
         );
       }
 
-      // console.log("TOKEN:", token);
-      // console.log("Profile created:", res.data);
+      window.location.reload();
+      
     } catch (error) {
       if (error.response) {
         console.log("Status:", error.response.status);
@@ -108,6 +111,7 @@ function Profile() {
         console.log("Error:", error.message);
       }
     }
+
   }
 
   useEffect(() => {
@@ -149,16 +153,16 @@ function Profile() {
   }, []);
 
   return (
-    <div className="profile-page" style={{ backgroundColor: "white" }}>
+    <div className="profile-page" style={{ backgroundColor: theme.palette.mode === "dark" ? "#111" : "white", }}>
       <div className="profile-header">
         <div>
-          <h3>My profile</h3>
+          <h3 style={{color: theme.palette.mode === "dark" ? "white" : "#000",}}>My profile</h3>
         </div>
       </div>
 
-      <div className="overlay-card">
+      <div className="overlay-card" style={{ background: theme.palette.mode === "dark" ? "rgba(33, 33, 33, 0.6)" : "rgba(245, 239, 239, 0.55)" }}>
         <div className="profile-main">
-          <div className="left-card">
+          <div className="left-card" style={{ background: theme.palette.mode === "dark" ? "#000" : "#fff" }}>
             <div className="avatar-wrap">
               <label htmlFor="profile-image">
                 {create.imge ? (
@@ -198,6 +202,7 @@ function Profile() {
                   onChange={(e) =>
                     setCreate({ ...create, name: e.target.value })
                   }
+                  style={{ color: theme.palette.mode === "dark" ? "white" : "black" }}
                 />
               </div>
 
@@ -238,7 +243,7 @@ function Profile() {
           </div>
 
           <div className="right-column">
-            <div className="card accounts-card">
+            <div className="card accounts-card"  style={{ background: theme.palette.mode === "dark" ? "#000" : "#fff" }}>
               <div className="account-item">
                 <FormControl variant="standard" style={{ minWidth: 120 }}>
                   <InputLabel
@@ -263,7 +268,7 @@ function Profile() {
                   </Select>
                 </FormControl>
               </div>
-              <div className="account-item muted">
+              <div className="account-item muted"  >
                 <TextField
                   value={create.language}
                   variant="standard"
@@ -275,7 +280,7 @@ function Profile() {
               </div>
             </div>
 
-            <div className="card bills-card">
+            <div className="card bills-card" style={{ background: theme.palette.mode === "dark" ? "#000" : "#fff" }}>
               <ul
                 className="bills-list"
                 style={{
@@ -336,4 +341,3 @@ function Profile() {
 }
 
 export default Profile;
-
