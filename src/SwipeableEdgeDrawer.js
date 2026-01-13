@@ -128,7 +128,8 @@ export default function SwipeableEdgeDrawer({ open, onOpen, onClose, postId }) {
       );
 
       setGetComments((prev) => prev.filter((c) => c.id !== commentId));
-
+      //if the comment delete you must remove id 
+      setSelectedCommentId(null);
       handleMenuClose();
     } catch (err) {
       console.log("Error deleting comment:", err);

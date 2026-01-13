@@ -36,6 +36,7 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   },
 }));
 
+//ProminentAppBar
 export default function ProminentAppBar() {
 
   const theme = useTheme();
@@ -78,8 +79,8 @@ export default function ProminentAppBar() {
 
   const array = [
     // To move to the index path, we write  path:"."
-    { name: "My dashboard", icon: <DashboardIcon />, path: "." },
-    { name: "Posts", icon: <WysiwygIcon />, path: "Posts" },
+    // { name: "My dashboard", icon: <DashboardIcon />, path: "." },
+    { name: "Posts", icon: <WysiwygIcon />, path: "." },
     { name: "My post", icon: <PersonIcon />, path: "MyPost" },
     { name: "Settings", icon: <SettingsIcon />, path: "Settings" },
   ];

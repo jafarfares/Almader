@@ -1,5 +1,4 @@
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import CommentIcon from "@mui/icons-material/Comment";
 import SwipeableEdgeDrawer from "./SwipeableEdgeDrawer";
 import { useTheme } from "@mui/material/styles";
@@ -72,69 +71,138 @@ export default function Posts() {
   }, [token]);
 
   //like
-  async function Like(postId) {
-    try {
-      const res = await axios.post(
-        `https://backendlaravel.cupital.xyz/api/like/${postId}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+  // async function Like(postId) {
+  //   try {
+  //     const res = await axios.post(
+  //       `https://backendlaravel.cupital.xyz/api/like/${postId}`,
+  //       {},
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
 
-      setAllPosts((prev) =>
-        prev.map((post) =>
-          post.id === postId
-            ? {
-                ...post,
-                total_likes: res.data.total_likes,
-                is_liked: true,
-              }
-            : post
-        )
-      );
-    } catch (error) {
-      console.log("Error Like:", error);
-    }
+  //     setAllPosts((prev) =>
+  //       prev.map((post) =>
+  //         post.id === postId
+  //           ? {
+  //               ...post,
+  //               total_likes: res.data.total_likes,
+  //               is_liked: true,
+  //             }
+  //           : post
+  //       )
+  //     );
+  //   } catch (error) {
+  //     console.log("Error Like:", error);
+  //   }
+  // }
+
+
+
+
+  async function Like(postId) {
+  try {
+    await axios.post(
+      `https://backendlaravel.cupital.xyz/api/like/${postId}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setAllPosts((prev) =>
+      prev.map((post) =>
+        post.id === postId
+          ? {
+              ...post,
+              total_likes: (post.total_likes ?? 0) + 1,
+              is_liked: true,
+            }
+          : post
+      )
+    );
+  } catch (error) {
+    console.log("Error Like:", error);
   }
+}
+
 
   //unlike
-  async function unLike(postId) {
-    try {
-      const res = await axios.post(
-        `https://backendlaravel.cupital.xyz/api/unlike/${postId}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+  // async function unLike(postId) {
+  //   try {
+  //     const res = await axios.post(
+  //       `https://backendlaravel.cupital.xyz/api/unlike/${postId}`,
+  //       {},
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
 
-      setAllPosts((prev) =>
-        prev.map((post) =>
-          post.id === postId
-            ? {
-                ...post,
-                total_likes: res.data.total_likes,
-                is_liked: false,
-              }
-            : post
-        )
-      );
-    } catch (error) {
-      console.log("Error Unlike:", error);
-    }
+  //     setAllPosts((prev) =>
+  //       prev.map((post) =>
+  //         post.id === postId
+  //           ? {
+  //               ...post,
+  //               total_likes: res.data.total_likes,
+  //               is_liked: false,
+  //             }
+  //           : post
+  //       )
+  //     );
+  //   } catch (error) {
+  //     console.log("Error Unlike:", error);
+  //   }
+  // }
+
+
+
+
+async function unLike(postId) {
+  try {
+    await axios.post(
+      `https://backendlaravel.cupital.xyz/api/unlike/${postId}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setAllPosts((prev) =>
+      prev.map((post) =>
+        post.id === postId
+          ? {
+              ...post,
+              total_likes: Math.max((post.total_likes ?? 1) - 1, 0),
+              is_liked: false,
+            }
+          : post
+      )
+    );
+  } catch (error) {
+    console.log("Error Unlike:", error);
   }
+}
+
+
+
+
+
+
 
   //UI
   return (
     <div
       style={{
         padding: "40px",
-        backgroundColor: theme.palette.mode === "dark" ? "#282828":"#f5f6fa",
+        backgroundColor: theme.palette.mode === "dark" ? "#141414":"#f5f6fa",
         minHeight: "100vh",
         display: "flex",
         justifyContent: "center",
@@ -238,7 +306,7 @@ export default function Posts() {
 
             </div>
 
-            <BookmarkBorderIcon fontSize="small" />
+            
           </div>
         </div>
       ))}

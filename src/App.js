@@ -46,10 +46,11 @@ function App() {
           <Route path="/Register" element={<Register />} />
 
           <Route path="/dashboard" element={<ProminentAppBar />}>
-            <Route index element={<Dashoard />} />
+            {/* <Route index element={<Dashoard />} /> */}
+            <Route index element={<Posts />} />
             <Route path="profile" element={<Profile />} />
             <Route path="MyPost" element={<MyPost />} />
-            <Route path="Posts" element={<Posts />} />
+            
             
             <Route path="Settings" element={<Settings mode={mode} toggleTheme={toggleTheme} />} />
             <Route path="CreatePost" element={<CreatePost />} />

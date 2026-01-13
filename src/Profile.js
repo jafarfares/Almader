@@ -260,9 +260,9 @@ function Profile() {
                       setCreate({ ...create, gender: e.target.value })
                     }
                   >
-                    <MenuItem value="">
+                    {/* <MenuItem value="">
                       <em>Not Set</em>
-                    </MenuItem>
+                    </MenuItem> */}
                     <MenuItem value="male">Male</MenuItem>
                     <MenuItem value="female">Female</MenuItem>
                   </Select>

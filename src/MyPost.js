@@ -85,7 +85,6 @@ export default function MyPost() {
             padding: "15px",
             backgroundColor: theme.palette.mode === "dark" ? "#282828" : "rgba(245, 239, 239, 0.55)",
             borderRadius: "10px",
-            boxShadow: "0 8px 30px rgba(0,0,0,0.06)",
           }}
         >
           {posts.map((post) => {
@@ -99,7 +98,7 @@ export default function MyPost() {
                 sx={{
                   flex: "1 1 300px",
                   maxWidth: "33%",
-                  backgroundColor: theme.palette.mode === "dark" ? "#000" : "rgba(245, 239, 239, 0.55)",
+                  backgroundColor: theme.palette.mode === "dark" ? "#000" : "white",
                   padding: "5px",
                   borderRadius: "5px",
                   position: "relative",
